@@ -24,6 +24,7 @@ void WcSph::sphStep()
 {
 #define TIME_RECORD
 #define TIME_RECORD2
+#define TIME_RECORD3
 
 #ifdef TIME_RECORD
 	if( getFrameNumber()==0 ){
