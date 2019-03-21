@@ -23,6 +23,7 @@ using namespace std;
 void WcSph::sphStep()
 {
 #define TIME_RECORD
+#define TIME_RECORD2
 
 #ifdef TIME_RECORD
 	if( getFrameNumber()==0 ){
