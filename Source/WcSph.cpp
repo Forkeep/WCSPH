@@ -23,9 +23,6 @@ using namespace std;
 void WcSph::sphStep()
 {
 #define TIME_RECORD
-#define TIME_RECORD2
-#define TIME_RECORD3
-
 #ifdef TIME_RECORD
 	if( getFrameNumber()==0 ){
 		m_clog.setf(std::ios::left);
@@ -155,6 +152,7 @@ void WcSph::wc_computePressure()
 }
 
 // paritlce-particle interaction, [Mon92], [BT07]
+// 流体-相同种类流体
 inline void WcSph::wc_fluidPartForce_fsame(
 	FluidPart& fa, const FluidPart& fb, const real_t& dis,
 	const real_t& fm0, const real_t& alpha, const real_t& gamma )
@@ -175,10 +173,10 @@ inline void WcSph::wc_fluidPartForce_fsame(
 	}*/
 	vec_t xab = fa.position-fb.position;
 	real_t grad = -ker_W_grad(dis)/dis;
-	// momentum
+	// momentum 动量
 	real_t acce = grad
 		* ( -fm0 * (fa.presure/(fa.density*fa.density) + fb.presure/(fb.density*fb.density)) );
-	// viscosity
+	// viscosity 黏度 wc公式10
 	real_t pro = (fa.velocity-fb.velocity).dot( xab );
 	if( pro<0 ){
 		real_t nu = 2*alpha*m_TH.smoothRadius_h*m_TH.soundSpeed_cs / ( fa.density + fb.density );
@@ -186,9 +184,10 @@ inline void WcSph::wc_fluidPartForce_fsame(
 			-nu * pro / ( dis*dis + real_t(0.01)*m_TH.smoothRadius_h*m_TH.smoothRadius_h );
 		acce += grad * ( - fm0 * pi );
 	}
+	// xab真正的加速度
 	xab *= acce; fa.acceleration += xab;
 	// surface tension
-	//compute cohesion
+	//compute cohesion凝聚力
 	vec_t xab_coh = fa.position-fb.position;
 	real_t pai = 3.14f;
 	real_t Kij = 2*1000.0f/(fa.density+fb.density);
@@ -203,7 +202,7 @@ inline void WcSph::wc_fluidPartForce_fsame(
 	real_t acce_coh = -m_TH.r*fm0*C/dis;
 	xab_coh *= acce_coh;
 
-	//compute curvature
+	//compute curvature曲率
 	real_t acce_cur = -m_TH.r;
 	vec_t xab_cur = fa.n-fb.n;
 	xab_cur *= acce_cur;
@@ -219,6 +218,7 @@ inline void WcSph::wc_fluidPartForce_fsame(
 
 }
 // multiphase fluid, [SP08]
+// 流体-不同流体相互作用
 inline void WcSph::wc_fluidPartForce_fdiff(
 	FluidPart& fa, const FluidPart& fb, const real_t& dis,
 	const real_t& fma, const real_t& fmb, const real_t& alpha )
@@ -261,6 +261,7 @@ inline void WcSph::wc_fluidPartForce_fdiff(
 
 }
 // fluid-rigid coupling, [AIS*12]
+// 流体-固体耦合
 inline void WcSph::wc_fluidPartForce_bound(
 	FluidPart& fa, const BoundPart& rb, const real_t& dis,
 	const real_t& frho0, const real_t& r_alpha )
@@ -299,7 +300,7 @@ inline void WcSph::wc_fluidPartForce_bound(
 	// d_rho
 	fa.drho += frho0*rb.volume * pro * grad;
 #endif
-	// surface tension & adhesion
+	// surface tension & adhesion 粘附力
 	real_t A = 0.0f;
 	vec_t xab_adh = fa.position - rb.position;
 
@@ -313,6 +314,7 @@ inline void WcSph::wc_fluidPartForce_bound(
 	fa.acceleration += xab_adh;
 }
 // fluid-rigid coupling, [AIS*12]
+// 固体-流体耦合
 inline void WcSph::wc_boundPartForce_f(
 	BoundPart& ra, const FluidPart& fb, const real_t& dis,
 	const real_t& frho0, const real_t& fm0, const real_t& r_alpha )
@@ -363,23 +365,31 @@ inline void WcSph::wc_boundPartForce_f(
 
 }
 // compute gravity, pressure and friction force
+// 调用前边四个函数
 void WcSph::wc_computeForce()
 {
 	real_t v0 = std::pow( m_TH.spacing_r, vec_t::dim );
 	// foreach fluid
+	// 各种流体种类
 	for(int n_f=int(m_Fluids.size()),k=0; k<n_f; ++k){
 		std::vector<FluidPart>& f_parts = m_Fluids[k].fluidParticles;
 		const std::vector<NeigbStr>& f_neigbs = mg_NeigbOfFluids[k];
+		// 静态密度rho0
 		real_t rho0 = m_Fluids[k].restDensity_rho0;
+		// 每个粒子的质量fm0
 		real_t fm0 = rho0 * v0;
+		// alpha黏度系数
 		real_t alpha = m_Fluids[k].viscosity_alpha;
+		// gamma表面张力
 		real_t gamma = m_Fluids[k].surfaceTension_gamma;
+		// num 某一个类型粒子的所有粒子总数
 		int num = int(f_parts.size());
 
 		//cout<<m_TH.gravity_g<<endl;
 		// foreach particle
 	#pragma omp parallel for PARALLEL_SCHEDULE
 		for(int i=0; i<num; ++i){
+			// p_a单个粒子 本粒子的对象
 			FluidPart& p_a = f_parts[i];
 		#ifdef WC_TIMEADAPTIVE
 			if( p_a.active ){
@@ -388,18 +398,29 @@ void WcSph::wc_computeForce()
 				p_a.drho = 0;
 		#endif
 				p_a.acceleration = m_TH.gravity_g;
-				
+
 				//p_a.acceleration = vec_t::O;
-				const Neigb* neigbs=f_neigbs[i].neigs; int n=f_neigbs[i].num;
+				//  Neigb neigs[maxNeigbNum]; 此处_neigbs[i].neigs也是一个数组
+				const Neigb* neigbs=f_neigbs[i].neigs; 
+				// 邻居粒子的总数
+				int n=f_neigbs[i].num;
 				// forearch neighbour
+				// 所有的邻居粒子计算力（）
 				for(int j=0; j<n; ++j){
+					// 如果邻居是流体粒子
+					// pidx不是很理解？？？？？？？？？？？？？？
+					// class PartIdx不理解？？？？？？
 					if(neigbs[j].pidx.isFluid()){ // fluid neighbour
+					// ？？？？？？？？？？？？？？？？？？p_b应该是单个邻居粒子的对象
+					// class PartIdx
 						const FluidPart& p_b = getFluidPartOfIdx(neigbs[j].pidx);
 					#ifdef WC_TIMEADAPTIVE
 						((FluidPart&)p_b).dirty = true; 
 					#endif
 						int idx_b = neigbs[j].pidx.toFluidI();
 						// the same fluid
+						// k是种类  本粒子的种类（第一层循环中的下标） 
+						// idx_b是邻居粒子种类
 						if(idx_b==k){
 							wc_fluidPartForce_fsame(p_a, p_b, neigbs[j].dis, fm0, alpha, gamma);
 						// different fluid
@@ -410,6 +431,7 @@ void WcSph::wc_computeForce()
 								p_a, p_b, neigbs[j].dis, fm0, fmb, (alpha+b_alpha)/2);
 						}
 					}else{ // boundary neighbour
+					// ？？？？？？？？？？？？？？？？？？？？？？？
 						const BoundPart& p_b = getBoundPartOfIdx(neigbs[j].pidx);
 						int idx_b = neigbs[j].pidx.toSolidI();
 						real_t r_alpha = m_Solids[idx_b].viscosity_alpha;
