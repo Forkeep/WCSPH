@@ -31,7 +31,7 @@ class mySPH : public WcSph {
 	glm::vec3 wheel2 = glm::vec3(-0.0f, -7.0f, 0.0f);
 	glm::vec3 wheels = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 wheel2s = glm::vec3(-0.0f, -0.0f, 0.0f);
-	//³ÌĞòÖĞĞèÒªÁ¿¼¶µÄÊı¾İ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	double rf[181][4];
 	double lf[181][4];
 	double rk[181][4];
@@ -44,181 +44,189 @@ public:
 
 	virtual void setupScene()
 	{
-		//¶ÁÈ¡ÎÄ¼şÖĞËÙ¶ÈÊı¾İ
-		std::ifstream fin0("rf.txt", std::ios::in);
-		char line[1024] = { 0 };
-		std::string x = "";
-		std::string y = "";
-		std::string z = "";
-		int i = 0;
-		double t = 2.0f;
-		//int lineflag = 0;
-		while (fin0.getline(line, sizeof(line)))
-		{
-			cout << "´ò¿ªÁË" << endl;
-			//lineflag += 1;
-			std::stringstream word(line);
-			word >> x;
-			word >> y;
-			word >> z;
-			/*std::cout << "x: " << x << std::endl;
+		if(k==1){
+			
+			//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½
+			std::ifstream fin0("rf.txt", std::ios::in);
+			char line[1024] = {0};
+			std::string x = "";
+			std::string y = "";
+			std::string z = "";
+			int i = 0;
+			// åˆå§‹åŒ–t   æ•°å€¼ä»£è¡¨ä»å¼€å§‹è¿è¡Œåˆ°ä½•æ—¶å¼€å§‹ç¬¬ä¸€æ¬¡è¿åŠ¨
+			double t = 2.0f;
+			//int lineflag = 0;
+			while (fin0.getline(line, sizeof(line)))
+			{
+				cout << "ï¿½ï¿½ï¿½ï¿½" << endl;
+				//lineflag += 1;
+				std::stringstream word(line);
+				word >> x;
+				word >> y;
+				word >> z;
+				/*std::cout << "x: " << x << std::endl;
 			std::cout << "y: " << y << std::endl;
 			std::cout << "z: " << z << std::endl;*/
-			std::stringstream sa(x);
-			std::stringstream sb(y);
-			std::stringstream sc(z);
-			double a, b, c;
-			sa >> a;
-			sb >> b;
-			sc >> c;
-			rf[i][0] = a;
-			rf[i][1] = b;
-			rf[i][2] = c;
-			rf[i][3] = t;
-			t += 0.04;
-			i++;
-			//std::cout << "ÕâÊÇµÚ£¿ĞĞ" << lineflag << std::endl;
-		}
-		fin0.clear();
-		fin0.close();
+				std::stringstream sa(x);
+				std::stringstream sb(y);
+				std::stringstream sc(z);
+				double a, b, c;
+				sa >> a;
+				sb >> b;
+				sc >> c;
+				rf[i][0] = a;
+				rf[i][1] = b;
+				rf[i][2] = c;
+				rf[i][3] = t;
+				// 0.04ä¸ºæ—¶é—´é—´éš”ï¼Œåè¾¹ç”¨åˆ°æ¯è¿‡äº†è¿™æ®µæ—¶é—´ï¼Œå°±ä¼šè¿åŠ¨ä¸€æ¬¡
+				t += 0.04;
+				i++;
+				//std::cout << "ï¿½ï¿½ï¿½ÇµÚ£ï¿½ï¿½ï¿½" << lineflag << std::endl;
+			}
+			fin0.clear();
+			fin0.close();
 
-		//¶ÁÈ¡ÎÄ¼şÖĞËÙ¶ÈÊı¾İ
-		std::ifstream fin1("rk.txt", std::ios::in);
-		/*line[1024] = { 0 };*/
-		char line1[1024] = { 0 };
-		/*std::string x = "";
+			//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½
+			std::ifstream fin1("rk.txt", std::ios::in);
+			/*line[1024] = { 0 };*/
+			char line1[1024] = {0};
+			/*std::string x = "";
 		std::string y = "";
 		std::string z = "";*/
-		 i = 0;
-		t = 2.0f;
-		//int lineflag = 0;
-		while (fin1.getline(line1, sizeof(line1)))
-		{
-			cout << "´ò¿ªÁË" << endl;
-			//lineflag += 1;
-			std::stringstream word(line1);
-			word >> x;
-			word >> y;
-			word >> z;
-			/*std::cout << "x: " << x << std::endl;
+			i = 0;
+			t = 2.0f;
+			//int lineflag = 0;
+			while (fin1.getline(line1, sizeof(line1)))
+			{
+				cout << "ï¿½ï¿½ï¿½ï¿½" << endl;
+				//lineflag += 1;
+				std::stringstream word(line1);
+				word >> x;
+				word >> y;
+				word >> z;
+				/*std::cout << "x: " << x << std::endl;
 			std::cout << "y: " << y << std::endl;
 			std::cout << "z: " << z << std::endl;*/
-			std::stringstream sa(x);
-			std::stringstream sb(y);
-			std::stringstream sc(z);
-			double a, b, c;
-			sa >> a;
-			sb >> b;
-			sc >> c;
-			rk[i][0] = a;
-			rk[i][1] = b;
-			rk[i][2] = c;
-			rk[i][3] = t;
-			t += 0.04;
-			i++;
-			//std::cout << "ÕâÊÇµÚ£¿ĞĞ" << lineflag << std::endl;
-		}
-		fin1.clear();
-		fin1.close();
+				std::stringstream sa(x);
+				std::stringstream sb(y);
+				std::stringstream sc(z);
+				double a, b, c;
+				sa >> a;
+				sb >> b;
+				sc >> c;
+				rk[i][0] = a;
+				rk[i][1] = b;
+				rk[i][2] = c;
+				rk[i][3] = t;
+				t += 0.04;
+				i++;
+				//std::cout << "ï¿½ï¿½ï¿½ÇµÚ£ï¿½ï¿½ï¿½" << lineflag << std::endl;
+			}
+			fin1.clear();
+			fin1.close();
 
-		//¶ÁÈ¡ÎÄ¼şÖĞËÙ¶ÈÊı¾İ
-		std::ifstream fin2("lf.txt", std::ios::in);
-		char line2[1024] = { 0 };
-		/*std::string x = "";
+			//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½
+			std::ifstream fin2("lf.txt", std::ios::in);
+			char line2[1024] = {0};
+			/*std::string x = "";
 		std::string y = "";
 		std::string z = "";*/
-		i = 0;
-		t = 2.0f;
-		//int lineflag = 0;
-		while (fin2.getline(line2, sizeof(line2)))
-		{
-			cout << "´ò¿ªÁË" << endl;
-			//lineflag += 1;
-			std::stringstream word(line2);
-			word >> x;
-			word >> y;
-			word >> z;
-			/*std::cout << "x: " << x << std::endl;
+			i = 0;
+			t = 2.0f;
+			//int lineflag = 0;
+			while (fin2.getline(line2, sizeof(line2)))
+			{
+				cout << "ï¿½ï¿½ï¿½ï¿½" << endl;
+				//lineflag += 1;
+				std::stringstream word(line2);
+				word >> x;
+				word >> y;
+				word >> z;
+				/*std::cout << "x: " << x << std::endl;
 			std::cout << "y: " << y << std::endl;
 			std::cout << "z: " << z << std::endl;*/
-			std::stringstream sa(x);
-			std::stringstream sb(y);
-			std::stringstream sc(z);
-			double a, b, c;
-			sa >> a;
-			sb >> b;
-			sc >> c;
-			lf[i][0] = a;
-			lf[i][1] = b;
-			lf[i][2] = c;
-			lf[i][3] = t;
-			t += 0.04;
-			i++;
-			//std::cout << "ÕâÊÇµÚ£¿ĞĞ" << lineflag << std::endl;
-		}
-		fin2.clear();
-		fin2.close();
+				std::stringstream sa(x);
+				std::stringstream sb(y);
+				std::stringstream sc(z);
+				double a, b, c;
+				sa >> a;
+				sb >> b;
+				sc >> c;
+				lf[i][0] = a;
+				lf[i][1] = b;
+				lf[i][2] = c;
+				lf[i][3] = t;
+				t += 0.04;
+				i++;
+				//std::cout << "ï¿½ï¿½ï¿½ÇµÚ£ï¿½ï¿½ï¿½" << lineflag << std::endl;
+			}
+			fin2.clear();
+			fin2.close();
 
-		//¶ÁÈ¡ÎÄ¼şÖĞËÙ¶ÈÊı¾İ
-		std::ifstream fin3("lk.txt", std::ios::in);
-		char line3[1024] = { 0 };
-		/*std::string x = "";
+			//ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½
+			std::ifstream fin3("lk.txt", std::ios::in);
+			char line3[1024] = {0};
+			/*std::string x = "";
 		std::string y = "";
 		std::string z = "";*/
-		 i = 0;
-		 t = 2.0f;
-		//int lineflag = 0;
-		while (fin3.getline(line3, sizeof(line3)))
-		{
-			cout << "´ò¿ªÁË" << endl;
-			//lineflag += 1;
-			std::stringstream word(line3);
-			word >> x;
-			word >> y;
-			word >> z;
-			/*std::cout << "x: " << x << std::endl;
+			i = 0;
+			t = 2.0f;
+			//int lineflag = 0;
+			while (fin3.getline(line3, sizeof(line3)))
+			{
+				cout << "ï¿½ï¿½ï¿½ï¿½" << endl;
+				//lineflag += 1;
+				std::stringstream word(line3);
+				word >> x;
+				word >> y;
+				word >> z;
+				/*std::cout << "x: " << x << std::endl;
 			std::cout << "y: " << y << std::endl;
 			std::cout << "z: " << z << std::endl;*/
-			std::stringstream sa(x);
-			std::stringstream sb(y);
-			std::stringstream sc(z);
-			double a, b, c;
-			sa >> a;
-			sb >> b;
-			sc >> c;
-			lk[i][0] = a;
-			lk[i][1] = b;
-			lk[i][2] = c;
-			lk[i][3] = t;
-			t += 0.04;
-			i++;
-			//std::cout << "ÕâÊÇµÚ£¿ĞĞ" << lineflag << std::endl;
+				std::stringstream sa(x);
+				std::stringstream sb(y);
+				std::stringstream sc(z);
+				double a, b, c;
+				sa >> a;
+				sb >> b;
+				sc >> c;
+				lk[i][0] = a;
+				lk[i][1] = b;
+				lk[i][2] = c;
+				lk[i][3] = t;
+				t += 0.04;
+				i++;
+				//std::cout << "ï¿½ï¿½ï¿½ÇµÚ£ï¿½ï¿½ï¿½" << lineflag << std::endl;
+			}
+			fin3.clear();
+			fin3.close();
 		}
-		fin3.clear();
-		fin3.close();
+		
 
 
 		const real_t vis = 0.05f;
 		//m_TH.vis = vis;
 		if (vec_t::dim == 3) {
-			//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı//ÉèÖÃÒ»Ğ©ÏµÊı
+			//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½//ï¿½ï¿½ï¿½ï¿½Ò»Ğ©Ïµï¿½ï¿½
 			//m_TH.spacing_r = 0.05f;
 			m_TH.spacing_r = 0.5f;
 			//m_TH.spacing_r26 = pow(2 * m_TH.spacing_r, 6);
 			m_TH.particle_volume = m_TH.spacing_r*m_TH.spacing_r*m_TH.spacing_r;
 			m_TH.smoothRadius_h = 2 * m_TH.spacing_r;
+			// æ—¶é—´ä¸é•¿è¿˜å’Œå£°é€Ÿæœ‰å…³ï¼Ÿï¼Ÿï¼Ÿï¼Ÿå“ªç¯‡è®ºæ–‡ï¼Ÿ
 			m_TH.dt = real_t(1.0)*m_TH.spacing_r / m_TH.soundSpeed_cs * 3;
+			// hæ˜¯ä»€ä¹ˆ
 			m_TH.h = 0.2f;
 			m_TH.r = 1.0f;
 			m_TH.bt = 1.0f;
 			//m_TH.enable_vortex = 0;
-			//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡//ÉèÖÃ·ÂÕæ¿Õ¼ä´óĞ¡
+			//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡//ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½Ğ¡
 			m_TH.spaceMin.set(-20);
 			m_TH.spaceMax.set(20);
 			//m_TH.spaceMax[0] = 28;
 			//m_TH.spaceMax[1] = 28;
 
-			//³¡¾°2£ºÈı¸öÖù×Ó
+			//ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			// container, solid 0
 			BoundPart bp0;
 			bp0.color[0] = bp0.color[1] = bp0.color[2] = 0.4f; bp0.color[3] = 1;
@@ -227,22 +235,22 @@ public:
 
 			//vec_t container_size = vec_t(16.0f, 10.0f, 5.0f);
 			//vec_t rb = container_size;
-			//ºĞ×ÓµÄ´óĞ¡ÒÔ¼°Ìí¼ÓºĞ×ÓºĞ×ÓµÄ´óĞ¡ÒÔ¼°Ìí¼ÓºĞ×ÓºĞ×ÓµÄ´óĞ¡ÒÔ¼°Ìí¼ÓºĞ×ÓºĞ×ÓµÄ´óĞ¡ÒÔ¼°Ìí¼ÓºĞ×ÓºĞ×ÓµÄ´óĞ¡ÒÔ¼°Ìí¼ÓºĞ×Ó
-			rb[0] = 13.0f;//³¤¶Èx
+			//ï¿½ï¿½ï¿½ÓµÄ´ï¿½Ğ¡ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Óºï¿½ï¿½Óºï¿½ï¿½ÓµÄ´ï¿½Ğ¡ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Óºï¿½ï¿½Óºï¿½ï¿½ÓµÄ´ï¿½Ğ¡ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Óºï¿½ï¿½Óºï¿½ï¿½ÓµÄ´ï¿½Ğ¡ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Óºï¿½ï¿½Óºï¿½ï¿½ÓµÄ´ï¿½Ğ¡ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½
+			rb[0] = 13.0f;//ï¿½ï¿½ï¿½ï¿½x
 			//rb[0] = m_TH.spaceMax[0];
 			//printf("%f\n",rb[0]);
 			//printf("%s\n", typeid(rb).name());
-			rb[1] = 4.0f;//¸ß¶Èz
-			rb[2] = 8.0f;//¿í¶Èy
+			rb[1] = 4.0f;//ï¿½ß¶ï¿½z
+			rb[2] = 8.0f;//ï¿½ï¿½ï¿½ï¿½y
 			//rb[2] = m_TH.spaceMax[2];
-			//½«ºĞ×Ó´óĞ¡±äÁ¿±£´æ£¬·½±ãºó±ß¼ÓÈëÁ÷Ìå
+			//ï¿½ï¿½ï¿½ï¿½ï¿½Ó´ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ£¬ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			vec_t fluidScale(1.0f);
 			fluidScale[0] = rb[0];
 			fluidScale[1] = rb[1] / 2;
 			fluidScale[2] = rb[2];
-			//³ÌĞòÔ­ÓĞÎ»ÖÃ
+			//ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½Î»ï¿½ï¿½
 			//addRigidCuboid(rb, bp0, 0, vis, false, glm::translate(glm::vec3(10.5f, 10.0f - m_TH.spacing_r / 2 - 2, 0)));
-			//µÚÒ»¸öÊÇx£¬µÚ¶ş¸öÊÇz£¬µÚÈı¸öÊÇy
+			//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½y
 			addRigidCuboid(rb, bp0, 0, vis, false,
 				glm::translate(glm::vec3(0, -10.0f, 0)));
 			//rb[0] = 0.1f;
@@ -254,11 +262,11 @@ public:
 			bp0.color[0] = bp0.color[1] = bp0.color[2] = bp0.color[3] = 0.4f;
 			//bp0.color[3] = 1;
 			bp0.position = bp0.velocity = bp0.force = vec_t::O;
-			//Ìí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×ÓÌí¼ÓÈı¸ùÖù×Ó
-			rb[0] = 0.5f;//³¤¶È
-			rb[1] = 0.5f;//¸ß¶È
-			rb[2] = 0.5f;//¿í¶È
-			//µÚÒ»¸öÊÇx£¬µÚ¶ş¸öÊÇz£¬µÚÈı¸öÊÇy
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			rb[0] = 0.5f;//ï¿½ï¿½ï¿½ï¿½
+			rb[1] = 0.5f;//ï¿½ß¶ï¿½
+			rb[2] = 0.5f;//ï¿½ï¿½ï¿½ï¿½
+			//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½y
 			//addRigidCuboid(rb, bp0, 0, vis, false,
 			//glm::translate(glm::vec3(1.5f, 9.0f - m_TH.spacing_r / 2 - 2, 2.0f)));
 
@@ -266,16 +274,16 @@ public:
 			//glm::translate(glm::vec3(4.7f, 9.0f - m_TH.spacing_r / 2 - 2, -2.0f)));
 			//addRigidCuboid(rb, bp0, 0, vis, false,
 			//glm::translate(glm::vec3(7.5f, 9.0f - m_TH.spacing_r / 2 - 2, 2.0f)));
-			//ÂÌÉ«·½¿é 1ºÅ
+			//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½
 			addRigidCuboid(rb, bp0, 0, vis, false,
 				glm::translate(glm::vec3(rf[0][0]-5.0f, rf[0][1]+10.0f, rf[0][2]-5.0f)));
-			//ö¦É«·½¿é 2ºÅ
+			//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½
 			addRigidCuboid(rb, bp0, 0, vis, false,
 				glm::translate(glm::vec3(rk[0][0] - 5.0f, rk[0][1] + 10.0f, rk[0][2] - 5.0f)));
-			//À¶É«·½¿é 3ºÅ
+			//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½
 			addRigidCuboid(rb, bp0, 0, vis, false,
 				glm::translate(glm::vec3(lf[0][0] - 5.0f, lf[0][1] + 10.0f, lf[0][2] - 5.0f)));
-			//×ÏÉ«·½¿é 4ºÅ
+			//ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ 4ï¿½ï¿½
 			addRigidCuboid(rb, bp0, 0, vis, false,
 				glm::translate(glm::vec3(lk[0][0] - 5.0f, lk[0][1] + 10.0f, lk[0][2] - 5.0f)));
 
@@ -283,9 +291,9 @@ public:
 			FluidPart fp0;
 			fp0.velocity = vec_t::O; fp0.density = 1000;
 			fp0.color[1] = fp0.color[2] = 0.3f; fp0.color[0] = 0.9f; fp0.color[3] = 1;
-			//£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿£¿´Ë´¦²»Ã÷°×
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			vec_t lb(-0.7f), rt(0.3f); rt[1] = 2; lb[1] += 5.2f; rt[1] += 10.0f;
-			//addFluidCuboid(true, 0, vec_t(-7.35f, -2.0f, -2.44f), vec_t(-3.55f, 5.5f, 2.44f), fp0, 1000, vis, 1);//±ÈBender 3±¶
+			//addFluidCuboid(true, 0, vec_t(-7.35f, -2.0f, -2.44f), vec_t(-3.55f, 5.5f, 2.44f), fp0, 1000, vis, 1);//ï¿½ï¿½Bender 3ï¿½ï¿½
 			//addFluidCuboid(true, 0, vec_t(-5.2f, -2.0f, -4.44f), vec_t(-1.35f, 10.0f, 4.44f), fp0, 1000, vis, 1);
 			//other set
 			addFluidCuboid(true, 0, -fluidScale + vec_t(m_TH.spacing_r) - vec_t(0, fluidScale[1], 0)- vec_t(0, 10.0f, 0),
@@ -425,3 +433,5 @@ protected:
 };
 
 #endif //#ifndef _DEMO_MYSPH_H_
+
+

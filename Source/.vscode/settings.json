@@ -10,7 +10,8 @@
         "new": "cpp",
         "stdexcept": "cpp",
         "typeinfo": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "iosfwd": "cpp"
     },
     "git.ignoreLimitWarning": true
 }

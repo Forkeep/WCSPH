@@ -36,6 +36,7 @@ std::string get_date_time_string(bool year = true, bool time = true);
 // change these typedef to use float or double, and vec3 or vec2
 // NOTE: for bullet and OpenGL, we use float in spite of what real_t is
 typedef float real_t;
+// 应该是一维三元素的数组  其中数据类型是float
 typedef vec_dim<DIMENSION, real_t>::T vec_t;
 typedef vec_dim<3, real_t>::T vec3_t;
 
@@ -55,7 +56,7 @@ class Particle
 {
   public:
     vec_t position; // position
-    vec_t velocity; // velocity
+    vec_t velocity; // velocity 速度 
     vec_t vel_adv;  //for iisph
     vec_t acce_adv; //for iisph
     vec_t acce_presure;
@@ -71,8 +72,8 @@ class Particle
 // fluid particle
 class FluidParticle : public Particle
 {
-  public:
-    real_t density;                     // density of particle
+  public: 
+    real_t density;                     // density of particle   密度
     real_t presure;                     // WCSPH or PCISPH
     vec_t acceleration;                 // acceleration
     vec_t vortex = vec_t(0, 0, 0);      //vortex
@@ -226,7 +227,7 @@ class SphSolid : public SphObject
 
     bool dynamic;   // true: dynamic solid, false: static rigid
     SolidType type; // type of this solid
-    real_t viscosity_alpha;
+    real_t viscosity_alpha; //黏度系数
     std::vector<Part> boundaryParticles;
     // for rigid: the psitions of boundaryParticles when transform is Identity
     // for softbody: the initial positions of nodes of btSoftBody

@@ -151,6 +151,11 @@ void WcSph::wc_computePressure()
 
 }
 
+// particle-body interaction []
+// 流体-人体关键点
+inline void WcSph::wc_fluidPartForce_body(){}
+
+
 // paritlce-particle interaction, [Mon92], [BT07]
 // 流体-相同种类流体
 inline void WcSph::wc_fluidPartForce_fsame(
@@ -285,13 +290,20 @@ inline void WcSph::wc_fluidPartForce_bound(
 	real_t grad = -ker_W_grad(dis)/dis, acce=0;
 	// momentum
 	if(fa.presure>0)
+	// 公式9 
 		acce += grad * ( - frho0*rb.volume * (fa.presure/(fa.density*fa.density)*2) );
-	// viscosity
+	// viscosity 黏度项 
+	// pro公式
+	// Pro为公式11 上边的max（，）中的左侧
 	real_t pro = (fa.velocity-rb.velocity).dot( xab );
 	if( pro<0 ){
+		// nu公式 11 下边小公式 表达式中的V
 		real_t nu = 2*r_alpha*m_TH.smoothRadius_h*m_TH.soundSpeed_cs / ( fa.density*2 );
+		// pi公式11
 		real_t pi =
 			-nu * pro / ( dis*dis + real_t(0.01)*m_TH.smoothRadius_h*m_TH.smoothRadius_h );
+			// 公式12、13？
+			// 公式中是力  这里直接是加速度？、？
 		acce += grad * (- frho0*rb.volume * pi );
 	}
 	xab *= acce; fa.acceleration += xab;
