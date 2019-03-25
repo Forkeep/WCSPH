@@ -98,12 +98,16 @@ void SphWithIO::oglDrawSolid(bool(*test)(int i))  const
 	}
 }
 
-
 // particles are sampled at regular cubic grid points
+// 在规则的立方网格点对粒子进行采样
 // the cube is defined by parameter leftBottom and rightTop(Axis-Aligned box)
+// 立方体由参数leftbottom和righttop（轴对齐框）定义
 // parameter fpart is the initial fluid paricle used to initialize fluid particles
+// 参数fpart是用于初始化流体粒子的初始流体粒子
 // parameter newFluid = true: add a new fluid, fluidIdx will be ignored
+// 参数newFluid=true:添加新流体，FluidIDX将被忽略
 // false: add particles to last fluid and the last three parameters are ignored
+// 错误：将粒子添加到最后一个流体，忽略最后三个参数
 void SphWithIO::addFluidCuboid( bool newFluid, int fluidIdx,
 	const vec_t& leftBottom, const vec_t& rightTop, const FluidPart& fpart,
 	real_t restDensity, real_t viscosity, real_t tension )
@@ -229,7 +233,7 @@ void SphWithIO::makeCubeSampleParts(
 	}
 
 }
-
+// 参数：???
 void SphWithIO::makeCubeMeshAndBtShape( GLTriMesh& mesh, btCollisionShape** shape,
 	const vec_t& halfWidth, bool haveTop, real_t thickness) const
 {
@@ -348,19 +352,26 @@ void SphWithIO::makeCubeMeshAndBtShape( GLTriMesh& mesh, btCollisionShape** shap
 
 
 // if mass>0 dynamic=true
+// addRigidCuboid(rb, bp0, 0, vis, false,
+// glm::translate(glm::vec3(rf[0][0]-5.0f, rf[0][1]+10.0f, rf[0][2]-5.0f)));
+// halfWidth ? bpart:固体粒子类型  mass ： 质量   vis : 黏度 havetop：？？  transform: ???
 void SphWithIO::addRigidCuboid(	const vec_t& halfWidth,
 	const BoundPart& bpart, float mass, real_t viscosity,
 	bool haveTop, const glm::mat4& transform )
-{	
+{
 	// btRigidBody
+	// ????????GLTriMesh
 	GLTriMesh* trimesh=new GLTriMesh(); btCollisionShape* cshape;
+
 	makeCubeMeshAndBtShape(*trimesh, &cshape, halfWidth, haveTop, m_TH.spacing_r );
 	btRigidBody* prigid; btTransform trans; trans.setFromOpenGLMatrix(&transform[0][0]);
 	makeBtRigidBody(&prigid, cshape, mass, trans);
 
 	MBtSolid btsolid(prigid, trimesh);
 	Solid sphsolid( mass>0,Solid::RIGIDBODY,viscosity,0 );
+
 	makeCubeSampleParts( sphsolid.innerPositions, halfWidth, haveTop, m_TH.spacing_r );
+
 	sphsolid.boundaryParticles.resize(sphsolid.innerPositions.size(), bpart);
 
 	addSolid( sphsolid, btsolid );
